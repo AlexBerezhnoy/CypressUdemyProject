@@ -54,7 +54,7 @@ describe('Privat24 tests', () => {
 
     })
 
-    it.only('Example sending the POST request ', () => {
+    it('Example sending the POST request ', () => {
 
         const requestBody = {
             "action": "add",
@@ -78,8 +78,39 @@ describe('Privat24 tests', () => {
                 headers: headersData
             })
             .then((response) => {
-                console.log(response.body);
+                expect(response).to.have.property('status').to.equal(200)
+                expect(response.body).to.have.property('status').to.equal("success")
+                expect(response.body.data).to.have.property('id')
             })
+
+    })
+
+    it.only('Example sending the POST request ', () => {
+
+        const requestBody = {
+            "action": "add",
+            "phone": "+380680310775",
+            "amount": 50,
+            "currency": "UAH",
+            "cardCvv": "111",
+            "card": "4552331448138217",
+            "cardExp": "0524",
+            "operator": "Kyivstar Ukraine",
+            "operatorId": "602",
+            "xref": "0b8ff67fcc3258161dad2cb1007a5d53",
+            "_": 1619200159450
+        }
+
+        const headersData = {cookie: "_ga=GA1.2.1758838676.1618080785; _gid=GA1.2.1020219545.1619199426; pubkey=317014d488b93a3ed119a246d82ec7fb; lfp=4/10/2021, 9:53:16 PM; pa=1619199438004.22070.10417836353285082next.privat24.ua0.9738190003556719+1; fp=11; _gat_gtag_UA_29683426_11=1"}
+        cy.request({
+                method: "POST",
+                url: "https://next.privat24.ua/api/p24/pub/mobipay",
+                body: requestBody,
+                headers: headersData
+            }).its('body').should("contain", {
+                status:'success'
+            })
+           
 
     })
 })
